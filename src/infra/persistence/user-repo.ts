@@ -4,7 +4,7 @@ export interface UserRecord {
   email: string;
   passwordHash: string;
   status: 'ACTIVE' | 'DISABLED' | 'DELETED';
-  createAt: Date;
+  createdAt: Date;
 }
 
 export interface CreateUserRecord {
