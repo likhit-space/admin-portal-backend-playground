@@ -1,0 +1,49 @@
+# =========================
+# Node / Package manager
+# =========================
+node_modules/
+.pnpm-store/
+
+# =========================
+# Build output
+# =========================
+dist/
+build/
+
+# =========================
+# TypeScript
+# =========================
+*.tsbuildinfo
+
+# =========================
+# Environment variables
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Logs
+# =========================
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =========================
+# Test & Coverage
+# =========================
+coverage/
+
+# =========================
+# Editor / OS
+# =========================
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# =========================
+# Docker
+# =========================
+docker-data/
