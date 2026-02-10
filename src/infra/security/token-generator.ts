@@ -5,5 +5,5 @@ export interface AccessTokenResult {
 
 export interface TokenGenerator {
   generateRefreshToken(): string;
-  generateAccessToken(input: { userId: string, sessionId: string }): AccessTokenResult;
+  generateAccessToken(payload: { userId: string, sessionId: string }): AccessTokenResult;
 }
