@@ -24,7 +24,17 @@ describe('AuthServiceImpl', () => {
         passwordHash: input.passwordHash,
         status: 'ACTIVE',
         createdAt: new Date(),
+        updatedAt: new Date(),
       }),
+      countAll: async () => {
+        throw new Error('not used');
+      },
+      updateStatus: async () => {
+        throw new Error('not used');
+      },
+      findMany: async()=> {
+        throw new Error('not used');
+      }
     };
 
     const fakeSessionRepo: SessionRepository = {
@@ -97,6 +107,7 @@ describe('AuthServiceImpl', () => {
         passwordHash: 'hashed',
         status: 'ACTIVE',
         createdAt: new Date(),
+        updatedAt: new Date()
       }),
       findById: async () => {
         throw new Error('not used');
@@ -104,6 +115,15 @@ describe('AuthServiceImpl', () => {
       create: async () => {
         throw new Error('should not be called');
       },
+      countAll: async () => {
+        throw new Error('not used');
+      },
+      updateStatus: async () => {
+        throw new Error('not used');
+      },
+      findMany: async()=> {
+        throw new Error('not used');
+      }
     };
     const authService = new AuthServiceImpl(
       fakeUserRepo,
@@ -132,6 +152,7 @@ describe('AuthServiceImpl', () => {
         passwordHash: 'hashed-password',
         status: 'ACTIVE',
         createdAt: new Date(),
+        updatedAt: new Date()
       }),
       findById: async () => {
         throw new Error('not used');
@@ -139,6 +160,15 @@ describe('AuthServiceImpl', () => {
       create: async () => {
         throw new Error('not used');
       },
+      countAll: async () => {
+        throw new Error('not used');
+      },
+      updateStatus: async () => {
+        throw new Error('not used');
+      },
+      findMany: async()=> {
+        throw new Error('not used');
+      }
     };
 
     const fakeSessionRepo: SessionRepository = {
@@ -213,6 +243,15 @@ describe('AuthServiceImpl', () => {
       create: async () => {
         throw new Error('not used');
       },
+      countAll: async () => {
+        throw new Error('not used');
+      },
+      updateStatus: async () => {
+        throw new Error('not used');
+      },
+      findMany: async()=> {
+        throw new Error('not used');
+      }
     };
 
     const authService = new AuthServiceImpl(
@@ -246,10 +285,20 @@ describe('AuthServiceImpl', () => {
         passwordHash: 'hashed',
         status: 'ACTIVE',
         createdAt: new Date(),
+        updatedAt: new Date(),
       }),
       create: async () => {
         throw new Error('not used');
       },
+      countAll: async () => {
+        throw new Error('not used');
+      },
+      updateStatus: async () => {
+        throw new Error('not used');
+      },
+      findMany: async()=> {
+        throw new Error('not used');
+      }
     };
 
     const fakeSessionRepo: SessionRepository = {

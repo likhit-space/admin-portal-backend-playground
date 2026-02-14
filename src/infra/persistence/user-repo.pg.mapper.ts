@@ -7,6 +7,7 @@ interface UserRow {
   password_hash: string;
   status: 'ACTIVE' | 'DISABLED' | 'DELETED';
   created_at: Date;
+  updated_at: Date;
 }
 
 export function mapUserRowToRecord(row: UserRow): UserRecord {
@@ -17,5 +18,6 @@ export function mapUserRowToRecord(row: UserRow): UserRecord {
     passwordHash: row.password_hash,
     status: row.status,
     createdAt: row.created_at,
+    updatedAt: row.updated_at
   };
 }
