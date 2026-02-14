@@ -30,9 +30,17 @@ export function createAuthRoute() {
   const authController = createAuthController(authService);
 
   // Routes
-  router.post('/register', validate(registerSchema), authController.register);
-  router.post('/login', validate(loginSchema), authController.login);
-  router.post('/refresh', validate(refreshSchema), authController.refresh);
+  router.post(
+    '/register',
+    validate({ body: registerSchema }),
+    authController.register,
+  );
+  router.post('/login', validate({ body: loginSchema }), authController.login);
+  router.post(
+    '/refresh',
+    validate({ body: refreshSchema }),
+    authController.refresh,
+  );
 
   return router;
 }

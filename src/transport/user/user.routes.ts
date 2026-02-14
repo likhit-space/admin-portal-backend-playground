@@ -1,0 +1,51 @@
+import { Router } from 'express';
+import { PgUserRepository } from '../../infra/persistence';
+import { UserServiceImpl } from '../../core/user/user-service.impl';
+import { createUserController } from './user.controller';
+import { authenticate } from '../middlewares/authenticate.middleware';
+import { validate } from '../middlewares/validate.middleware';
+import {
+  listUsersQuerySchema,
+  updateUserStatusSchema,
+  userIdParamSchema,
+} from './user.schemas';
+import { JwtTokenVerifier } from '../../infra/security';
+
+export function createUserRoutes() {
+  const router = Router();
+
+  const userRepo = new PgUserRepository();
+  const userService = new UserServiceImpl(userRepo);
+  const controller = createUserController(userService);
+
+  const tokenVerifier = new JwtTokenVerifier();
+  const authMiddleware = authenticate(tokenVerifier);
+
+  router.use(authMiddleware);
+
+  // GET /users/me
+  router.get('/me', controller.getCurrentUser);
+
+  // GET /users
+  router.get(
+    '/',
+    validate({ query: listUsersQuerySchema }),
+    controller.listUsers,
+  );
+
+  // GET /users/:id
+  router.get(
+    '/:id',
+    validate({ params: userIdParamSchema }),
+    controller.getUserById,
+  );
+
+  // PATCH /users/:id/status
+  router.patch(
+    '/:id/status',
+    validate({ params: userIdParamSchema, body: updateUserStatusSchema }),
+    controller.updateUserStatus,
+  );
+
+  return router;
+}

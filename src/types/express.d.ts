@@ -1,10 +1,15 @@
-import 'express'
+import 'express';
 
 declare global {
   namespace Express {
     interface Request {
       user?: {
         userId: string;
+      };
+      validated?: {
+        body?: any;
+        query?: any;
+        params?: any;
       };
     }
   }
