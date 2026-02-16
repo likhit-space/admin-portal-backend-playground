@@ -1,4 +1,4 @@
-import { UserStatus } from '../../domain/user';
+import { UserRole, UserStatus } from '../../domain/user';
 import { pgPool } from '../db/pg-pool';
 import {
   CreateUserRecord,
@@ -9,6 +9,35 @@ import {
 import { mapUserRowToRecord } from './user-repo.pg.mapper';
 
 export class PgUserRepository implements UserRepository {
+  async updateRole(id: string, role: UserRole): Promise<UserRecord> {
+    const result = await pgPool.query(
+      `
+    UPDATE users
+    SET role = $1,
+        updated_at = NOW()
+    WHERE id = $2
+    RETURNING id, username, email, password_hash, status, role, created_at, updated_at
+    `,
+      [role, id],
+    );
+
+    if (result.rowCount === 0) {
+      throw new Error('User not found while updating role');
+    }
+
+    return mapUserRowToRecord(result.rows[0]);
+  }
+  async countByRole(role: UserRole): Promise<number> {
+    const result = await pgPool.query(
+      `
+    SELECT COUNT(*)::int AS count
+    FROM users
+    WHERE role = $1
+    `,
+      [role],
+    );
+    return result.rows[0].count;
+  }
   async findMany(params: FindManyUsersParams): Promise<UserRecord[]> {
     const values: unknown[] = [];
     const conditions: string[] = [];

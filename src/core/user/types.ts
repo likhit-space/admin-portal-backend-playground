@@ -1,6 +1,6 @@
-import { UserRole, UserStatus } from "../../domain/user";
+import { UserRole, UserStatus } from '../../domain/user';
 
-export interface User {  
+export interface User {
   id: string;
   username: string;
   email: string;
@@ -50,4 +50,13 @@ export interface UpdateUserStatusInput {
 
 export interface UpdateUserStatusOutput {
   user: User;
+}
+
+export interface ChangeUserRoleInput {
+  userId: string;
+  newRole: 'ADMIN' | 'STAFF';
+}
+
+export interface ChangeUserRoleOutput {
+  user: User
 }

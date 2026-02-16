@@ -1,9 +1,5 @@
 import { UserRecord, UserRepository } from '../../infra/persistence';
-import {
-  ForbiddenError,
-  InvalidUserStatusTransitionError,
-  UserNotFound,
-} from './user-errors';
+import { ForbiddenError, UserNotFound } from './user-errors';
 import { UserServiceImpl } from './user-service.impl';
 
 describe('UserServiceImpl', () => {
@@ -29,6 +25,8 @@ describe('UserServiceImpl', () => {
       findMany: jest.fn(),
       countAll: jest.fn(),
       updateStatus: jest.fn(),
+      updateRole: jest.fn(),
+      countByRole: jest.fn(),
     };
     service = new UserServiceImpl(mockRepo);
   });
@@ -136,6 +134,41 @@ describe('UserServiceImpl', () => {
         ),
       ).rejects.toBeInstanceOf(ForbiddenError);
       expect(mockRepo.updateStatus).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('changeUserRole', () => {
+    const superAdminActor = {
+      userId: 'super-1',
+      role: 'SUPER_ADMIN' as const,
+    };
+    const staffActor = {
+      userId: 'staff-1',
+      role: 'STAFF' as const,
+    };
+
+    it('should update role successfully when actor is SUPER_ADMIN', async () => {
+      mockRepo.findById.mockResolvedValue(baseUser);
+      mockRepo.updateRole.mockResolvedValue({
+        ...baseUser,
+        role: 'ADMIN',
+      });
+
+      const result = await service.changeUserRole(
+        { userId: 'u1', newRole: 'ADMIN' },
+        superAdminActor,
+      );
+      expect(mockRepo.updateRole).toHaveBeenCalledWith('u1', 'ADMIN');
+      expect(result.user.role).toBe('ADMIN');
+    });
+
+    it('should throw ForbiddenError when actor is not SUPER_ADMIN', async () => {
+      mockRepo.findById.mockResolvedValue(baseUser);
+
+      await expect(
+        service.changeUserRole({ userId: 'u1', newRole: 'ADMIN' }, staffActor),
+      ).rejects.toBeInstanceOf(ForbiddenError);
+      expect(mockRepo.updateRole).not.toHaveBeenCalled();
     });
   });
 });

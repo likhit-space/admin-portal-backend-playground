@@ -1,4 +1,4 @@
-import { UserRole, UserStatus } from "../../domain/user";
+import { UserRole, UserStatus } from '../../domain/user';
 
 export interface UserRecord {
   id: string;
@@ -16,7 +16,7 @@ export interface CreateUserRecord {
   email: string;
   passwordHash: string;
   status: 'ACTIVE';
-  role: 'STAFF'
+  role: 'STAFF';
 }
 
 export interface FindManyUsersParams {
@@ -33,4 +33,7 @@ export interface UserRepository {
   findMany(params: FindManyUsersParams): Promise<UserRecord[]>;
   countAll(status?: UserStatus): Promise<number>;
   updateStatus(id: string, status: UserStatus): Promise<UserRecord>;
+
+  updateRole(id: string, role: UserRole): Promise<UserRecord>;
+  countByRole(role: UserRole): Promise<number>;
 }

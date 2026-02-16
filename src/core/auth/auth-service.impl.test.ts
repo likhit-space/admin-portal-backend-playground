@@ -36,6 +36,12 @@ describe('AuthServiceImpl', () => {
       findMany: async () => {
         throw new Error('not used');
       },
+      updateRole: async () => {
+        throw new Error('not used');
+      },
+      countByRole: async () => {
+        throw new Error('not used');
+      }
     };
 
     const fakeSessionRepo: SessionRepository = {
@@ -127,6 +133,12 @@ describe('AuthServiceImpl', () => {
       findMany: async () => {
         throw new Error('not used');
       },
+      updateRole: async () => {
+        throw new Error('not used');
+      },
+      countByRole: async () => {
+        throw new Error('not used');
+      }
     };
     const authService = new AuthServiceImpl(
       fakeUserRepo,
@@ -173,6 +185,12 @@ describe('AuthServiceImpl', () => {
       findMany: async () => {
         throw new Error('not used');
       },
+      updateRole: async () => {
+        throw new Error('not used');
+      },
+      countByRole: async () => {
+        throw new Error('not used');
+      }
     };
 
     const fakeSessionRepo: SessionRepository = {
@@ -257,6 +275,12 @@ describe('AuthServiceImpl', () => {
       findMany: async () => {
         throw new Error('not used');
       },
+      updateRole: async () => {
+        throw new Error('not used');
+      },
+      countByRole: async () => {
+        throw new Error('not used');
+      }
     };
 
     const authService = new AuthServiceImpl(
@@ -305,6 +329,12 @@ describe('AuthServiceImpl', () => {
       findMany: async () => {
         throw new Error('not used');
       },
+      updateRole: async () => {
+        throw new Error('not used');
+      },
+      countByRole: async () => {
+        throw new Error('not used');
+      }
     };
 
     const fakeSessionRepo: SessionRepository = {

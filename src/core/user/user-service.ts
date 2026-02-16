@@ -1,5 +1,7 @@
 import { UserIdentity } from '../../domain/user';
 import {
+  ChangeUserRoleInput,
+  ChangeUserRoleOutput,
   GetCurrentUserInput,
   GetCurrentUserOutput,
   GetUserByIdInput,
@@ -16,6 +18,10 @@ export interface UserService {
   listUsers(input: ListUsersInput): Promise<ListUsersOutput>;
   updateUserStatus(
     input: UpdateUserStatusInput,
-    actor: UserIdentity
+    actor: UserIdentity,
   ): Promise<UpdateUserStatusOutput>;
+  changeUserRole(
+    input: ChangeUserRoleInput,
+    actor: UserIdentity,
+  ): Promise<ChangeUserRoleOutput>;
 }

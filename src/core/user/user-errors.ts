@@ -1,4 +1,4 @@
-import { AppError } from "../../common";
+import { AppError } from '../../common';
 
 export class UserNotFound extends AppError {
   readonly code = 'USER_NOT_FOUND';
@@ -21,5 +21,13 @@ export class ForbiddenError extends AppError {
 
   constructor(message = 'You are not allowed to perform this action') {
     super(message);
+  }
+}
+
+export class CannotDemoteLastSuperAdminError extends AppError {
+  readonly code = 'CANNOT_DEMOTE_LAST_SUPER_ADMIN';
+
+  constructor() {
+    super('Cannot demote the last SUPER_ADMIN');
   }
 }

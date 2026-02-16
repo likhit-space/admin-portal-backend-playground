@@ -1,6 +1,8 @@
 import { UserIdentity, UserStatus } from '../../domain/user';
 import { UserRecord, UserRepository } from '../../infra/persistence';
 import {
+  ChangeUserRoleInput,
+  ChangeUserRoleOutput,
   GetCurrentUserInput,
   GetCurrentUserOutput,
   GetUserByIdInput,
@@ -12,6 +14,7 @@ import {
   User,
 } from './types';
 import {
+  CannotDemoteLastSuperAdminError,
   ForbiddenError,
   InvalidUserStatusTransitionError,
   UserNotFound,
@@ -20,6 +23,30 @@ import { UserService } from './user-service';
 
 export class UserServiceImpl implements UserService {
   constructor(private readonly userRepo: UserRepository) {}
+  async changeUserRole(
+    input: ChangeUserRoleInput,
+    actor: UserIdentity,
+  ): Promise<ChangeUserRoleOutput> {
+    if (actor.role !== 'SUPER_ADMIN') {
+      throw new ForbiddenError();
+    }
+
+    const target = await this.loadOrThrow(input.userId);
+
+    if (target.role === input.newRole) {
+      return { user: this.toEntity(target) };
+    }
+
+    if (target.role === 'SUPER_ADMIN') {
+      const count = await this.userRepo.countByRole('SUPER_ADMIN');
+      if (count <= 1) {
+        throw new CannotDemoteLastSuperAdminError();
+      }
+    }
+
+    const updated = await this.userRepo.updateRole(target.id, input.newRole);
+    return { user: this.toEntity(updated) };
+  }
 
   async getCurrentUser(
     input: GetCurrentUserInput,
