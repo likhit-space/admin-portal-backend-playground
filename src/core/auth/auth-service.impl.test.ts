@@ -23,6 +23,7 @@ describe('AuthServiceImpl', () => {
         email: input.email,
         passwordHash: input.passwordHash,
         status: 'ACTIVE',
+        role: 'STAFF',
         createdAt: new Date(),
         updatedAt: new Date(),
       }),
@@ -32,9 +33,9 @@ describe('AuthServiceImpl', () => {
       updateStatus: async () => {
         throw new Error('not used');
       },
-      findMany: async()=> {
+      findMany: async () => {
         throw new Error('not used');
-      }
+      },
     };
 
     const fakeSessionRepo: SessionRepository = {
@@ -91,6 +92,7 @@ describe('AuthServiceImpl', () => {
       username: 'john',
       email: 'john@example.com',
       status: 'ACTIVE',
+      role: 'STAFF'
     });
 
     expect(result.token.accessToken).toBe('access-token-abc');
@@ -106,8 +108,9 @@ describe('AuthServiceImpl', () => {
         email: 'exist@example.com',
         passwordHash: 'hashed',
         status: 'ACTIVE',
+        role: 'STAFF',
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       }),
       findById: async () => {
         throw new Error('not used');
@@ -121,9 +124,9 @@ describe('AuthServiceImpl', () => {
       updateStatus: async () => {
         throw new Error('not used');
       },
-      findMany: async()=> {
+      findMany: async () => {
         throw new Error('not used');
-      }
+      },
     };
     const authService = new AuthServiceImpl(
       fakeUserRepo,
@@ -151,8 +154,9 @@ describe('AuthServiceImpl', () => {
         email,
         passwordHash: 'hashed-password',
         status: 'ACTIVE',
+        role: 'STAFF',
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       }),
       findById: async () => {
         throw new Error('not used');
@@ -166,9 +170,9 @@ describe('AuthServiceImpl', () => {
       updateStatus: async () => {
         throw new Error('not used');
       },
-      findMany: async()=> {
+      findMany: async () => {
         throw new Error('not used');
-      }
+      },
     };
 
     const fakeSessionRepo: SessionRepository = {
@@ -225,6 +229,7 @@ describe('AuthServiceImpl', () => {
       username: 'john',
       email: 'john@example.com',
       status: 'ACTIVE',
+      role: 'STAFF'
     });
 
     expect(result.token).toEqual({
@@ -249,9 +254,9 @@ describe('AuthServiceImpl', () => {
       updateStatus: async () => {
         throw new Error('not used');
       },
-      findMany: async()=> {
+      findMany: async () => {
         throw new Error('not used');
-      }
+      },
     };
 
     const authService = new AuthServiceImpl(
@@ -284,6 +289,7 @@ describe('AuthServiceImpl', () => {
         email: 'john@example.com',
         passwordHash: 'hashed',
         status: 'ACTIVE',
+        role: 'STAFF',
         createdAt: new Date(),
         updatedAt: new Date(),
       }),
@@ -296,9 +302,9 @@ describe('AuthServiceImpl', () => {
       updateStatus: async () => {
         throw new Error('not used');
       },
-      findMany: async()=> {
+      findMany: async () => {
         throw new Error('not used');
-      }
+      },
     };
 
     const fakeSessionRepo: SessionRepository = {
@@ -362,6 +368,7 @@ describe('AuthServiceImpl', () => {
       username: 'john',
       email: 'john@example.com',
       status: 'ACTIVE',
+      role: 'STAFF',
     });
 
     expect(result.token).toEqual({

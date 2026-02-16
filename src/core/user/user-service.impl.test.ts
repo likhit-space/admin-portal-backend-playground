@@ -12,6 +12,7 @@ describe('UserServiceImpl', () => {
     email: 'john@test.com',
     passwordHash: 'hashed',
     status: 'ACTIVE',
+    role: 'STAFF',
     createdAt: new Date(),
     updatedAt: new Date(),
   };

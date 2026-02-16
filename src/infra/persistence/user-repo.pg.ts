@@ -25,7 +25,7 @@ export class PgUserRepository implements UserRepository {
     values.push(params.offset);
 
     const query = `
-      SELECT id, username, email, password_hash, status, created_at, updated_at
+      SELECT id, username, email, password_hash, status, role, created_at, updated_at
       FROM users
       ${whereClause}
       ORDER BY created_at DESC
@@ -62,7 +62,7 @@ export class PgUserRepository implements UserRepository {
       SET status = $1,
           updated_at = NOW()
       WHERE id = $2
-      RETURNING id, username, email, password_hash, status, created_at, updated_at
+      RETURNING id, username, email, password_hash, status, role, created_at, updated_at
       `,
       [status, id],
     );
@@ -76,7 +76,7 @@ export class PgUserRepository implements UserRepository {
   async findByEmail(email: string): Promise<UserRecord | null> {
     const result = await pgPool.query(
       `
-      SELECT id, username, email, password_hash, status, created_at, updated_at
+      SELECT id, username, email, password_hash, status, role, created_at, updated_at
       FROM users
       WHERE email = $1
       LIMIT 1
@@ -92,7 +92,7 @@ export class PgUserRepository implements UserRepository {
   async findById(id: string): Promise<UserRecord | null> {
     const result = await pgPool.query(
       `
-      SELECT id, username, email, password_hash, status, created_at, updated_at
+      SELECT id, username, email, password_hash, status, role, created_at, updated_at
       FROM users
       WHERE id = $1
       LIMIT 1
@@ -109,11 +109,17 @@ export class PgUserRepository implements UserRepository {
   async create(input: CreateUserRecord): Promise<UserRecord> {
     const result = await pgPool.query(
       `
-      INSERT INTO users (username, email, password_hash, status)
-      VALUES ($1, $2, $3, $4)
-      RETURNING id, username, email, password_hash, status, created_at, updated_at
+      INSERT INTO users (username, email, password_hash, status, role)
+      VALUES ($1, $2, $3, $4, $5)
+      RETURNING id, username, email, password_hash, status, role, created_at, updated_at
       `,
-      [input.username, input.email, input.passwordHash, input.status],
+      [
+        input.username,
+        input.email,
+        input.passwordHash,
+        input.status,
+        input.role,
+      ],
     );
     return mapUserRowToRecord(result.rows[0]);
   }

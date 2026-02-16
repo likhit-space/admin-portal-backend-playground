@@ -1,10 +1,10 @@
 import type { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { TokenVerifier } from '../../infra/security/token-verifier';
 import {
   AccessTokenExpiredError,
   InvalidAccessTokenError,
 } from '../../core/auth/auth-errors';
+import { TokenVerifier } from '../../infra/security';
 
 export function authenticate(tokenVerifier: TokenVerifier) {
   return (req: Request, _res: Response, next: NextFunction) => {
@@ -14,7 +14,7 @@ export function authenticate(tokenVerifier: TokenVerifier) {
     }
 
     const [, token] = authHeader.split(' ');
-    if(!token) {
+    if (!token) {
       return next(new InvalidAccessTokenError());
     }
 
@@ -22,6 +22,7 @@ export function authenticate(tokenVerifier: TokenVerifier) {
       const verified = tokenVerifier.verify(token);
       req.user = {
         userId: verified.userId,
+        role: verified.role,
       };
       return next();
     } catch (err) {

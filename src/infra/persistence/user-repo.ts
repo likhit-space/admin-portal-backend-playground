@@ -1,10 +1,12 @@
 export type UserStatus = 'ACTIVE' | 'DISABLED' | 'DELETED';
+export type UserRole = 'SUPER_ADMIN' | 'ADMIN' | 'STAFF';
 export interface UserRecord {
   id: string;
   username: string;
   email: string;
   passwordHash: string;
   status: UserStatus;
+  role: UserRole;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -14,6 +16,7 @@ export interface CreateUserRecord {
   email: string;
   passwordHash: string;
   status: 'ACTIVE';
+  role: 'STAFF';
 }
 
 export interface FindManyUsersParams {

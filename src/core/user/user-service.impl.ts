@@ -15,7 +15,6 @@ import { InvalidUserStatusTransitionError, UserNotFound } from './user-errors';
 import { UserService } from './user-service';
 
 export class UserServiceImpl implements UserService {
-
   constructor(private readonly userRepo: UserRepository) {}
 
   async getCurrentUser(
@@ -91,6 +90,7 @@ export class UserServiceImpl implements UserService {
       username: record.username,
       email: record.email,
       status: record.status,
+      role: record.role,
       createdAt: record.createdAt,
       updatedAt: record.updatedAt,
     };

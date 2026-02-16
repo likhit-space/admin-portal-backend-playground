@@ -1,6 +1,9 @@
+import { UserRole } from "../persistence";
+
 export interface VerifiedAccessToken {
   userId: string;
   sessionId: string;
+  role: UserRole;
   expiresAt: Date;
 }
 

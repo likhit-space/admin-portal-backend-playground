@@ -3,6 +3,7 @@ import {
   SessionRepository,
   UserRecord,
   UserRepository,
+  UserRole,
 } from '../../infra/persistence';
 import { PasswordHasher, TokenGenerator } from '../../infra/security';
 import { Clock } from '../../infra/time';
@@ -46,9 +47,10 @@ export class AuthServiceImpl implements AuthService {
       email: input.email,
       passwordHash,
       status: 'ACTIVE',
+      role: 'STAFF',
     });
 
-    const sessionContext = await this.createSessionForUser(user.id);
+    const sessionContext = await this.createSessionForUser(user.id, user.role);
     return this.buildAuthResult(user, sessionContext);
   }
   async login(input: LoginInput): Promise<AuthResult> {
@@ -68,7 +70,7 @@ export class AuthServiceImpl implements AuthService {
       throw new InvalidCredentialsError();
     }
 
-    const sessionContext = await this.createSessionForUser(user.id);
+    const sessionContext = await this.createSessionForUser(user.id, user.role);
 
     return this.buildAuthResult(user, sessionContext);
   }
@@ -99,11 +101,14 @@ export class AuthServiceImpl implements AuthService {
     // rotate session.
     await this.sessionRepo.revokeById(session.id);
 
-    const sessionContext = await this.createSessionForUser(user.id);
+    const sessionContext = await this.createSessionForUser(user.id, user.role);
     return this.buildAuthResult(user, sessionContext);
   }
 
-  private async createSessionForUser(userId: string): Promise<{
+  private async createSessionForUser(
+    userId: string,
+    role: UserRole,
+  ): Promise<{
     session: SessionRecord;
     accessToken: { token: string; expiresAt: Date };
     refreshToken: string;
@@ -121,6 +126,7 @@ export class AuthServiceImpl implements AuthService {
     const accessToken = this.tokenGenerator.generateAccessToken({
       sessionId: session.id,
       userId,
+      role,
     });
 
     return {
@@ -136,6 +142,7 @@ export class AuthServiceImpl implements AuthService {
       username: user.username,
       email: user.email,
       status: user.status,
+      role: user.role,
     };
   }
 

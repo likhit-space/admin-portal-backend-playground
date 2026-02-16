@@ -1,10 +1,12 @@
 export type UserStatus = 'ACTIVE' | 'DISABLED' | 'DELETED';
+export type Role = 'SUPER_ADMIN' | 'ADMIN' | 'STAFF';
 
 export interface AuthUser {
   id: string;
   username: string;
   email: string;
   status: UserStatus;
+  role: Role;
 }
 
 /**
