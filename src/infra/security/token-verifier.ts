@@ -1,4 +1,4 @@
-import { UserRole } from "../persistence";
+import { UserRole } from '../../domain/user';
 
 export interface VerifiedAccessToken {
   userId: string;

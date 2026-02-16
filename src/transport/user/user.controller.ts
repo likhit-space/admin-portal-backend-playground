@@ -34,10 +34,15 @@ export function createUserController(userService: UserService) {
     const { body } = req.validated as { body: UpdateUserRequest };
     const { params } = req.validated as { params: UserIdRequest };
 
-    const result = await userService.updateUserStatus({
-      userId: params.id,
-      newStatus: body.newStatus,
-    });
+    const actor = req.user!;
+
+    const result = await userService.updateUserStatus(
+      {
+        userId: params.id,
+        newStatus: body.newStatus,
+      },
+      actor,
+    );
     return res.status(200).json(result);
   };
 

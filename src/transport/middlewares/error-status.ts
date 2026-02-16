@@ -8,6 +8,7 @@ export function mapErrorCodeToHttpStatus(code: string): number {
 
     case 'USER_DISABLED':
     case 'USER_DELETED':
+    case 'FORBIDDEN':
       return 403;
 
     case 'EMAIL_ALREADY_EXISTS':

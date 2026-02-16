@@ -1,10 +1,10 @@
+import { UserStatus } from '../../domain/user';
 import { pgPool } from '../db/pg-pool';
 import {
   CreateUserRecord,
   FindManyUsersParams,
   UserRecord,
   UserRepository,
-  UserStatus,
 } from './user-repo';
 import { mapUserRowToRecord } from './user-repo.pg.mapper';
 

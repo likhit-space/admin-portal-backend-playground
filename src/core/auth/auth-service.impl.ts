@@ -1,9 +1,9 @@
+import { UserRole, UserStatus } from '../../domain/user';
 import {
   SessionRecord,
   SessionRepository,
   UserRecord,
   UserRepository,
-  UserRole,
 } from '../../infra/persistence';
 import { PasswordHasher, TokenGenerator } from '../../infra/security';
 import { Clock } from '../../infra/time';
@@ -23,7 +23,6 @@ import {
   RefreshInput,
   AuthResult,
   AuthUser,
-  UserStatus,
 } from './types';
 
 export class AuthServiceImpl implements AuthService {

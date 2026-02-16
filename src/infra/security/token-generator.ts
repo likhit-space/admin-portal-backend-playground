@@ -1,4 +1,4 @@
-import { UserRole } from "../persistence";
+import { UserRole } from '../../domain/user';
 
 export interface AccessTokenResult {
   token: string;
@@ -7,5 +7,9 @@ export interface AccessTokenResult {
 
 export interface TokenGenerator {
   generateRefreshToken(): string;
-  generateAccessToken(payload: { userId: string, sessionId: string, role: UserRole }): AccessTokenResult;
+  generateAccessToken(payload: {
+    userId: string;
+    sessionId: string;
+    role: UserRole;
+  }): AccessTokenResult;
 }

@@ -1,12 +1,11 @@
-export type UserStatus = 'ACTIVE' | 'DISABLED' | 'DELETED';
-export type Role = 'SUPER_ADMIN' | 'ADMIN' | 'STAFF';
+import { UserRole, UserStatus } from "../../domain/user";
 
 export interface AuthUser {
   id: string;
   username: string;
   email: string;
   status: UserStatus;
-  role: Role;
+  role: UserRole;
 }
 
 /**

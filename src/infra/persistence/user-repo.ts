@@ -1,5 +1,5 @@
-export type UserStatus = 'ACTIVE' | 'DISABLED' | 'DELETED';
-export type UserRole = 'SUPER_ADMIN' | 'ADMIN' | 'STAFF';
+import { UserRole, UserStatus } from "../../domain/user";
+
 export interface UserRecord {
   id: string;
   username: string;
@@ -16,7 +16,7 @@ export interface CreateUserRecord {
   email: string;
   passwordHash: string;
   status: 'ACTIVE';
-  role: 'STAFF';
+  role: 'STAFF'
 }
 
 export interface FindManyUsersParams {

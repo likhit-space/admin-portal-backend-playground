@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import type { TokenVerifier, VerifiedAccessToken } from './token-verifier';
-import { UserRole } from '../persistence';
+import { UserRole } from '../../domain/user';
 
 type JwtPayload = {
   userId: string;

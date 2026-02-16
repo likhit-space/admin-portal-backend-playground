@@ -1,3 +1,4 @@
+import { UserIdentity, UserStatus } from '../../domain/user';
 import { UserRecord, UserRepository } from '../../infra/persistence';
 import {
   GetCurrentUserInput,
@@ -9,9 +10,12 @@ import {
   UpdateUserStatusInput,
   UpdateUserStatusOutput,
   User,
-  UserStatus,
 } from './types';
-import { InvalidUserStatusTransitionError, UserNotFound } from './user-errors';
+import {
+  ForbiddenError,
+  InvalidUserStatusTransitionError,
+  UserNotFound,
+} from './user-errors';
 import { UserService } from './user-service';
 
 export class UserServiceImpl implements UserService {
@@ -51,7 +55,11 @@ export class UserServiceImpl implements UserService {
   }
   async updateUserStatus(
     input: UpdateUserStatusInput,
+    actor: UserIdentity,
   ): Promise<UpdateUserStatusOutput> {
+    if (actor.role !== 'ADMIN' && actor.role !== 'SUPER_ADMIN') {
+      throw new ForbiddenError();
+    }
     const existing = await this.loadOrThrow(input.userId);
     if (!this.canTransition(existing.status, input.newStatus)) {
       throw new InvalidUserStatusTransitionError();

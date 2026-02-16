@@ -15,3 +15,11 @@ export class InvalidUserStatusTransitionError extends AppError {
     super('Invalid user status transition');
   }
 }
+
+export class ForbiddenError extends AppError {
+  readonly code = 'FORBIDDEN';
+
+  constructor(message = 'You are not allowed to perform this action') {
+    super(message);
+  }
+}

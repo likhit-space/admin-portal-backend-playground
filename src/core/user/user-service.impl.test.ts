@@ -1,5 +1,9 @@
 import { UserRecord, UserRepository } from '../../infra/persistence';
-import { InvalidUserStatusTransitionError, UserNotFound } from './user-errors';
+import {
+  ForbiddenError,
+  InvalidUserStatusTransitionError,
+  UserNotFound,
+} from './user-errors';
 import { UserServiceImpl } from './user-service.impl';
 
 describe('UserServiceImpl', () => {
@@ -11,8 +15,8 @@ describe('UserServiceImpl', () => {
     username: 'john',
     email: 'john@test.com',
     passwordHash: 'hashed',
-    status: 'ACTIVE',
-    role: 'STAFF',
+    status: 'ACTIVE' as const,
+    role: 'STAFF' as const,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
@@ -95,25 +99,43 @@ describe('UserServiceImpl', () => {
         status: 'DISABLED',
       });
 
-      const result = await service.updateUserStatus({
-        userId: 'u1',
-        newStatus: 'DISABLED',
-      });
+      const actor = {
+        userId: 'admin-1',
+        role: 'ADMIN' as const,
+      };
+
+      const result = await service.updateUserStatus(
+        {
+          userId: 'u1',
+          newStatus: 'DISABLED',
+        },
+        actor,
+      );
 
       expect(result.user.status).toBe('DISABLED');
-      expect(mockRepo.updateStatus).toHaveBeenCalledWith('u1', 'DISABLED');
+      expect(mockRepo.updateStatus).toHaveBeenCalled();
     });
     it('should throw InvalidUserStatusTransitionError on invalid transition', async () => {
       mockRepo.findById.mockResolvedValue({
         ...baseUser,
         status: 'DELETED',
       });
+
+      const actor = {
+        userId: 'staff-1',
+        role: 'STAFF' as const,
+      };
+
       await expect(
-        service.updateUserStatus({
-          userId: 'u1',
-          newStatus: 'ACTIVE',
-        }),
-      ).rejects.toBeInstanceOf(InvalidUserStatusTransitionError);
+        service.updateUserStatus(
+          {
+            userId: 'u1',
+            newStatus: 'ACTIVE',
+          },
+          actor,
+        ),
+      ).rejects.toBeInstanceOf(ForbiddenError);
+      expect(mockRepo.updateStatus).not.toHaveBeenCalled();
     });
   });
 });

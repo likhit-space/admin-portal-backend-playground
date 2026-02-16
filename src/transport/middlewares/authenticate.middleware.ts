@@ -5,6 +5,7 @@ import {
   InvalidAccessTokenError,
 } from '../../core/auth/auth-errors';
 import { TokenVerifier } from '../../infra/security';
+import { UserIdentity } from '../../domain/user';
 
 export function authenticate(tokenVerifier: TokenVerifier) {
   return (req: Request, _res: Response, next: NextFunction) => {
@@ -20,10 +21,12 @@ export function authenticate(tokenVerifier: TokenVerifier) {
 
     try {
       const verified = tokenVerifier.verify(token);
-      req.user = {
+      const identity: UserIdentity = {
         userId: verified.userId,
         role: verified.role,
       };
+      req.user = identity;
+
       return next();
     } catch (err) {
       if (err instanceof jwt.TokenExpiredError) {

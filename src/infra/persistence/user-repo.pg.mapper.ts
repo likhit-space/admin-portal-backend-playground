@@ -1,3 +1,4 @@
+import { UserRole, UserStatus } from '../../domain/user';
 import { UserRecord } from './user-repo';
 
 interface UserRow {
@@ -5,8 +6,8 @@ interface UserRow {
   username: string;
   email: string;
   password_hash: string;
-  status: 'ACTIVE' | 'DISABLED' | 'DELETED';
-  role: 'SUPER_ADMIN' | 'ADMIN' | 'STAFF';
+  status: UserStatus;
+  role: UserRole;
   created_at: Date;
   updated_at: Date;
 }

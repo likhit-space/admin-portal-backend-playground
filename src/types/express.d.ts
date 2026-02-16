@@ -1,5 +1,5 @@
 import 'express';
-import { UserRole } from '../infra/persistence';
+import { UserRole } from '../domain/user';
 
 declare global {
   namespace Express {
