@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { UserService } from '../../core/user/user-service';
 import {
+  ChangeUserRoleRequest,
   ListUsersRequest,
   UpdateUserRequest,
   UserIdRequest,
@@ -46,10 +47,28 @@ export function createUserController(userService: UserService) {
     return res.status(200).json(result);
   };
 
+  const changeUserRole = async (req: Request, res: Response) => {
+    const { body, params } = req.validated as {
+      body: ChangeUserRoleRequest;
+      params: UserIdRequest;
+    };
+
+    const actor = req.user!;
+    const result = await userService.changeUserRole(
+      {
+        userId: params.id,
+        newRole: body.newRole,
+      },
+      actor,
+    );
+    return res.status(200).json(result);
+  };
+
   return {
     getCurrentUser,
     getUserById,
     listUsers,
     updateUserStatus,
+    changeUserRole
   };
 }

@@ -5,6 +5,7 @@ import { createUserController } from './user.controller';
 import { authenticate } from '../middlewares/authenticate.middleware';
 import { validate } from '../middlewares/validate.middleware';
 import {
+  changeUserRoleSchema,
   listUsersQuerySchema,
   updateUserStatusSchema,
   userIdParamSchema,
@@ -45,6 +46,13 @@ export function createUserRoutes() {
     '/:id/status',
     validate({ params: userIdParamSchema, body: updateUserStatusSchema }),
     controller.updateUserStatus,
+  );
+
+  // PATCH /users/:id/role
+  router.patch(
+    '/:id/role',
+    validate({ params: userIdParamSchema, body: changeUserRoleSchema }),
+    controller.changeUserRole,
   );
 
   return router;

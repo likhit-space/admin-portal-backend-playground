@@ -20,3 +20,9 @@ export const updateUserStatusSchema = z.object({
 });
 
 export type UpdateUserRequest = z.infer<typeof updateUserStatusSchema>;
+
+export const changeUserRoleSchema = z.object({
+  newRole: z.enum(['ADMIN', 'STAFF']),
+});
+
+export type ChangeUserRoleRequest = z.infer<typeof changeUserRoleSchema>;
