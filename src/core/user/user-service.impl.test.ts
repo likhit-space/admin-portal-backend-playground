@@ -1,3 +1,5 @@
+import { ExecutionContext } from '../../domain/common/execution-context';
+import { Logger } from '../../infra/logger';
 import { UserRecord, UserRepository } from '../../infra/persistence';
 import { ForbiddenError, UserNotFound } from './user-errors';
 import { UserServiceImpl } from './user-service.impl';
@@ -5,6 +7,8 @@ import { UserServiceImpl } from './user-service.impl';
 describe('UserServiceImpl', () => {
   let mockRepo: jest.Mocked<UserRepository>;
   let service: UserServiceImpl;
+  let mockLogger: jest.Mocked<Logger>;
+  let mockContext: ExecutionContext;
 
   const baseUser: UserRecord = {
     id: 'u1',
@@ -28,7 +32,13 @@ describe('UserServiceImpl', () => {
       updateRole: jest.fn(),
       countByRole: jest.fn(),
     };
-    service = new UserServiceImpl(mockRepo);
+    mockLogger = {
+      info: jest.fn(),
+      warn: jest.fn(),
+      error: jest.fn(),
+    };
+    service = new UserServiceImpl(mockRepo, mockLogger);
+    mockContext = { requestId: '123' };
   });
 
   // getCurrentUser
@@ -108,6 +118,7 @@ describe('UserServiceImpl', () => {
           newStatus: 'DISABLED',
         },
         actor,
+        mockContext,
       );
 
       expect(result.user.status).toBe('DISABLED');
@@ -131,6 +142,7 @@ describe('UserServiceImpl', () => {
             newStatus: 'ACTIVE',
           },
           actor,
+          mockContext,
         ),
       ).rejects.toBeInstanceOf(ForbiddenError);
       expect(mockRepo.updateStatus).not.toHaveBeenCalled();
@@ -157,6 +169,7 @@ describe('UserServiceImpl', () => {
       const result = await service.changeUserRole(
         { userId: 'u1', newRole: 'ADMIN' },
         superAdminActor,
+        mockContext,
       );
       expect(mockRepo.updateRole).toHaveBeenCalledWith('u1', 'ADMIN');
       expect(result.user.role).toBe('ADMIN');
@@ -166,7 +179,11 @@ describe('UserServiceImpl', () => {
       mockRepo.findById.mockResolvedValue(baseUser);
 
       await expect(
-        service.changeUserRole({ userId: 'u1', newRole: 'ADMIN' }, staffActor),
+        service.changeUserRole(
+          { userId: 'u1', newRole: 'ADMIN' },
+          staffActor,
+          mockContext,
+        ),
       ).rejects.toBeInstanceOf(ForbiddenError);
       expect(mockRepo.updateRole).not.toHaveBeenCalled();
     });

@@ -11,12 +11,13 @@ import {
   userIdParamSchema,
 } from './user.schemas';
 import { JwtTokenVerifier } from '../../infra/security';
+import { Logger } from '../../infra/logger';
 
-export function createUserRoutes() {
+export function createUserRoutes(logger: Logger) {
   const router = Router();
 
   const userRepo = new PgUserRepository();
-  const userService = new UserServiceImpl(userRepo);
+  const userService = new UserServiceImpl(userRepo, logger);
   const controller = createUserController(userService);
 
   const tokenVerifier = new JwtTokenVerifier();

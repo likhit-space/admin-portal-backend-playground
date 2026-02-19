@@ -43,6 +43,7 @@ export function createUserController(userService: UserService) {
         newStatus: body.newStatus,
       },
       actor,
+      { requestId: req.requestId },
     );
     return res.status(200).json(result);
   };
@@ -60,6 +61,7 @@ export function createUserController(userService: UserService) {
         newRole: body.newRole,
       },
       actor,
+      { requestId: req.requestId },
     );
     return res.status(200).json(result);
   };
@@ -69,6 +71,6 @@ export function createUserController(userService: UserService) {
     getUserById,
     listUsers,
     updateUserStatus,
-    changeUserRole
+    changeUserRole,
   };
 }

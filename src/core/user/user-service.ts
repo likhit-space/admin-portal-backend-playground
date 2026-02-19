@@ -1,3 +1,4 @@
+import { ExecutionContext } from '../../domain/common/execution-context';
 import { UserIdentity } from '../../domain/user';
 import {
   ChangeUserRoleInput,
@@ -19,9 +20,11 @@ export interface UserService {
   updateUserStatus(
     input: UpdateUserStatusInput,
     actor: UserIdentity,
+    context: ExecutionContext
   ): Promise<UpdateUserStatusOutput>;
   changeUserRole(
     input: ChangeUserRoleInput,
     actor: UserIdentity,
+    context: ExecutionContext
   ): Promise<ChangeUserRoleOutput>;
 }

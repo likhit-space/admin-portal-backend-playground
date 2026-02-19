@@ -1,4 +1,6 @@
+import { ExecutionContext } from '../../domain/common/execution-context';
 import { UserIdentity, UserStatus } from '../../domain/user';
+import { Logger } from '../../infra/logger';
 import { UserRecord, UserRepository } from '../../infra/persistence';
 import {
   ChangeUserRoleInput,
@@ -22,10 +24,14 @@ import {
 import { UserService } from './user-service';
 
 export class UserServiceImpl implements UserService {
-  constructor(private readonly userRepo: UserRepository) {}
+  constructor(
+    private readonly userRepo: UserRepository,
+    private readonly logger: Logger,
+  ) {}
   async changeUserRole(
     input: ChangeUserRoleInput,
     actor: UserIdentity,
+    context: ExecutionContext,
   ): Promise<ChangeUserRoleOutput> {
     if (actor.role !== 'SUPER_ADMIN') {
       throw new ForbiddenError();
@@ -45,6 +51,14 @@ export class UserServiceImpl implements UserService {
     }
 
     const updated = await this.userRepo.updateRole(target.id, input.newRole);
+    this.logger.info('user_role_changed', {
+      ...(context?.requestId && { requestId: context.requestId }),
+      event: 'user_role_changed',
+      actorId: actor.userId,
+      targetId: target.id,
+      from: target.role,
+      to: input.newRole,
+    });
     return { user: this.toEntity(updated) };
   }
 
@@ -83,6 +97,7 @@ export class UserServiceImpl implements UserService {
   async updateUserStatus(
     input: UpdateUserStatusInput,
     actor: UserIdentity,
+    context: ExecutionContext,
   ): Promise<UpdateUserStatusOutput> {
     if (actor.role !== 'ADMIN' && actor.role !== 'SUPER_ADMIN') {
       throw new ForbiddenError();
@@ -96,6 +111,15 @@ export class UserServiceImpl implements UserService {
       input.userId,
       input.newStatus,
     );
+
+    this.logger.info('user_status_updated', {
+      ...(context?.requestId && { requestId: context.requestId }),
+      event: 'user_status_updated',
+      actorId: actor.userId,
+      targetId: existing.id,
+      from: existing.status,
+      to: input.newStatus,
+    });
     return { user: this.toEntity(updated) };
   }
 

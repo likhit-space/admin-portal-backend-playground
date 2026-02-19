@@ -7,8 +7,9 @@ import { AuthServiceImpl } from '../../core/auth/auth-service.impl';
 import { createAuthController } from './auth.controller';
 import { validate } from '../middlewares/validate.middleware';
 import { loginSchema, refreshSchema, registerSchema } from './auth.schemas';
+import { Logger } from '../../infra/logger';
 
-export function createAuthRoute() {
+export function createAuthRoute(logger: Logger) {
   const router = Router();
 
   const userRepo = new PgUserRepository();
