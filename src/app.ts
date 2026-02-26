@@ -1,8 +1,11 @@
 import express, { type Express } from 'express';
-import { errorMiddleware } from './transport/middlewares/error.middleware';
 import { createAuthRoute, createUserRoutes } from './transport';
 import { ConsoleLogger } from './infra/logger';
-import { createHttpLoggerMiddleware, requestIdMiddleware } from './transport/middlewares';
+import {
+  createHttpLoggerMiddleware,
+  errorMiddleware,
+  requestIdMiddleware,
+} from './transport/middlewares';
 
 export function createApp(): Express {
   const app = express();

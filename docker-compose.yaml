@@ -5,13 +5,58 @@ services:
     image: postgres:16
     container_name: admin-portal-postgres
     environment:
-      POSTGRES_DB: admin_portal_api
+      POSTGRES_DB: admin_portal_db
       POSTGRES_USER: admin_portal
       POSTGRES_PASSWORD: admin_portal
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./docker/init:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+
+  loki:
+    image: grafana/loki:2.9.3
+    container_name: admin-portal-loki
+    ports:
+      - '3100:3100'
+    command: -config.file=/etc/loki/local-config.yaml
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:10.2.0
+    container_name: admin-portal-grafana
+    ports:
+      - '3001:3000'
+    depends_on:
+      - loki
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: admin-portal-api
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: production
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USER: admin_portal
+      DATABASE_PASSWORD: admin_portal
+      DATABASE_NAME: admin_portal_db
+    depends_on:
+      - postgres
+      - loki
+    restart: unless-stopped
+
+    logging:
+      driver: loki
+      options:
+        loki-url: 'http://host.docker.internal:3100/loki/api/v1/push'
+        loki-batch-size: '400'
+        loki-retries: '5'
 
 volumes:
   pgdata:
